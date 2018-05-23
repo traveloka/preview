@@ -2,9 +2,17 @@ import getRepoInfoFromUrl from "./github/getRepoInfoFromUrl";
 import getCodeOwners from "./github/getCodeOwners";
 import getUserMentions from "./github/getUserMentions";
 
+import observe from "./content/utils/observe";
 import reorderFiles from "./content/reorderFiles";
 
+let observer;
+
 const execute = async prUrl => {
+  if (observer) {
+    observer.disconnect();
+    observer = null;
+  }
+
   const repo = getRepoInfoFromUrl(prUrl);
 
   const [owners, userMentions] = await Promise.all([
@@ -12,7 +20,8 @@ const execute = async prUrl => {
     getUserMentions(repo)
   ]);
 
-  reorderFiles(owners, userMentions);
+  const callback = () => reorderFiles(owners, userMentions);
+  observer = observe("#files", callback, { childList: true, subtree: true });
 };
 
 const isFilesSection = () => window.location.pathname.endsWith("/files");

@@ -1,3 +1,5 @@
+![PReview Logo](https://user-images.githubusercontent.com/1614415/40420806-b9ede03a-5eb3-11e8-9eb3-39aabfec668f.png)
+
 # PReview
 
 [![CircleCI](https://circleci.com/gh/traveloka/preview/tree/master.svg?style=svg)](https://circleci.com/gh/traveloka/preview/tree/master)

@@ -11,8 +11,7 @@ export default function reorderFiles(owners, userMentions) {
     const path = fileHeader.querySelector(".file-header").dataset.path;
     if (!isOwner(path, owners, userMentions)) {
       fileHeader.classList.add("Details--on");
+      fileHeader.style.opacity = 0.3;
     }
   }
-
-  // TODO add mutation observer
 }
