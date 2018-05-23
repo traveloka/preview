@@ -1,11 +1,11 @@
 import domFind from "../content/utils/domFind";
 import fetchHtml from "./fetchHtml";
 import mapCodeOwners from "./mapCodeOwners";
-import getDefaultBranch from "./getDefaultBranch";
+import getTargetBranch from "./getTargetBranch";
 
 export default async function getCodeOwners(repo) {
   try {
-    const branch = await getDefaultBranch(repo);
+    const branch = getTargetBranch();
     const html = await fetchHtml(`/blob/${branch}/.github/CODEOWNERS`, repo);
     const codeowners = domFind(
       html,
