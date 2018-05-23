@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node utils/build.js",
     "start": "node utils/webserver.js",
-    "test": "jest",
+    "test": "jest --coverage",
     "precommit": "lint-staged"
   },
   "devDependencies": {

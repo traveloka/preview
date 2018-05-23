@@ -1,5 +1,7 @@
 # PReview
 
+[![CircleCI](https://circleci.com/gh/traveloka/preview/tree/master.svg?style=svg)](https://circleci.com/gh/traveloka/preview/tree/master)
+
 > Browser extension to help make your GitHub PR review experience better
 
 ## Setup
