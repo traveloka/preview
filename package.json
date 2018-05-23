@@ -29,7 +29,6 @@
     "write-file-webpack-plugin": "3.4.2"
   },
   "dependencies": {
-    "@octokit/rest": "^15.6.1",
     "ignore": "^3.3.8"
   },
   "lint-staged": {
