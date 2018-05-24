@@ -8,6 +8,7 @@ import applyPreview from "./content/applyPreview";
 import injectToggle from "./content/injectToggle";
 import isFilesSection from "./utils/isFilesSection";
 import { HISTORY_STATE_UPDATE } from "./utils/events";
+import { FILTER, HIDEOTHER, SHOWALL } from "./constants/toggleValueEnum";
 
 let observer;
 
@@ -20,8 +21,8 @@ const execute = async prUrl => {
   }
 
   let enabled = await storage.get(STORAGE_KEY);
-  if (typeof enabled !== "boolean") {
-    enabled = true;
+  if (![FILTER, HIDEOTHER, SHOWALL].includes(enabled)) {
+    enabled = FILTER;
   }
 
   const repo = getRepoInfoFromUrl(prUrl);
@@ -32,11 +33,7 @@ const execute = async prUrl => {
   ]);
 
   const toggleSwitchCallback = async value => {
-    if (value === "showall") {
-      await storage.set(STORAGE_KEY, false);
-    } else {
-      await storage.set(STORAGE_KEY, true);
-    }
+    await storage.set(STORAGE_KEY, value);
     execute(window.location.href);
   };
 

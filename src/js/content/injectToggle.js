@@ -1,17 +1,26 @@
 import { oneLineTrim } from "common-tags";
+import { FILTER, HIDEOTHER, SHOWALL } from "../constants/toggleValueEnum";
 
 const template = oneLineTrim`
   <div class="BtnGroup d-flex flex-content-stretch">
     <label class="flex-auto btn btn-sm BtnGroup-item text-center">
-      <input class="sr-only" value="filter" name="gh:preview" type="radio" />
+      <input class="sr-only" value="${FILTER}" name="gh:preview" type="radio" />
       PReview Mode
     </label>
     <label class="flex-auto btn btn-sm BtnGroup-item text-center">
-      <input class="sr-only" value="showall" name="gh:preview" type="radio" />
+      <input class="sr-only" value="${HIDEOTHER}" name="gh:preview" type="radio" />
+      Compact mode
+    </label>
+    <label class="flex-auto btn btn-sm BtnGroup-item text-center">
+      <input class="sr-only" value="${SHOWALL}" name="gh:preview" type="radio" />
       Show All Files
     </label>
   </div>
 `;
+
+const selectInput = input => {
+  input.parentNode.classList.add("selected");
+};
 
 export default function injectToggle(enabled, handler) {
   const bar = document.querySelector(".diffbar");
@@ -26,26 +35,41 @@ export default function injectToggle(enabled, handler) {
     const toggle = document.createElement("div");
     toggle.id = "gh-preview-toggle";
     toggle.className = "diffbar-item";
-    toggle.style.width = "200px";
+    toggle.style.width = "300px";
     toggle.style.position = "relative";
     toggle.style.top = "-4px";
     toggle.innerHTML = template;
 
-    const input = enabled
-      ? toggle.querySelector('input[value="filter"]')
-      : toggle.querySelector('input[value="showall"]');
+    let defaultSelectedInput;
+    switch (enabled) {
+      case FILTER:
+        defaultSelectedInput = toggle.querySelector(`input[value="${FILTER}"]`);
+        break;
+      case HIDEOTHER:
+        defaultSelectedInput = toggle.querySelector(
+          `input[value="${HIDEOTHER}"]`
+        );
+        break;
+      case SHOWALL:
+        defaultSelectedInput = toggle.querySelector(
+          `input[value="${SHOWALL}"]`
+        );
+        break;
+      default:
+        break;
+    }
 
-    input.checked = "checked";
-    input.parentNode.classList.add("selected");
+    selectInput(defaultSelectedInput);
 
     stat.parentNode.insertBefore(toggle, stat.nextSibling);
 
     toggle.querySelectorAll("input").forEach(input => {
       input.addEventListener("click", () => {
-        const sibling =
-          input.parentNode.nextSibling || input.parentNode.previousSibling;
-        input.parentNode.classList.toggle("selected");
-        sibling.classList.toggle("selected");
+        const clickedInput = toggle.querySelector(
+          `input[value="${input.value}"]`
+        );
+        toggle.querySelector(".selected").classList.remove("selected");
+        selectInput(clickedInput);
         handler(input.value);
       });
     });
