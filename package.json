@@ -29,6 +29,7 @@
     "write-file-webpack-plugin": "3.4.2"
   },
   "dependencies": {
+    "common-tags": "^1.7.2",
     "ignore": "^3.3.8"
   },
   "lint-staged": {

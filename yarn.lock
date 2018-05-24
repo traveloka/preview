@@ -989,6 +989,12 @@ commander@^2.14.1:
   version "2.15.1"
   resolved "https://registry.npmjs.org/commander/-/commander-2.15.1.tgz#df46e867d0fc2aec66a34662b406a9ccafff5b0f"
 
+common-tags@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.npmjs.org/common-tags/-/common-tags-1.7.2.tgz#24d9768c63d253a56ecff93845b44b4df1d52771"
+  dependencies:
+    babel-runtime "^6.26.0"
+
 compare-versions@^3.1.0:
   version "3.2.1"
   resolved "https://registry.npmjs.org/compare-versions/-/compare-versions-3.2.1.tgz#a49eb7689d4caaf0b6db5220173fd279614000f7"
