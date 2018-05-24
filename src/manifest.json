@@ -7,7 +7,7 @@
     "128": "icon-128.png"
   },
   "permissions": [
-    "activeTab",
+    "webNavigation",
     "storage"
   ],
   "content_scripts": [

@@ -4,6 +4,8 @@ import getUserMentions from "./github/getUserMentions";
 
 import observe from "./content/utils/observe";
 import reorderFiles from "./content/reorderFiles";
+import isFilesSection from "./utils/isFilesSection";
+import { HISTORY_STATE_UPDATE } from "./utils/events";
 
 let observer;
 
@@ -24,15 +26,13 @@ const execute = async prUrl => {
   observer = observe("#files", callback, { childList: true, subtree: true });
 };
 
-const isFilesSection = () => window.location.pathname.endsWith("/files");
-
-chrome.runtime.onMessage.addListener(function(request, sender) {
-  if (request.preview == "background") {
-    execute(request.location);
+chrome.runtime.onMessage.addListener((request, sender) => {
+  if (request.event === "historyStateUpdated") {
+    execute(request.url);
   }
 });
 
 // From URL
-if (isFilesSection()) {
+if (isFilesSection(window.location.href)) {
   execute(window.location.href);
 }
