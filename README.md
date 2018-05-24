@@ -1,4 +1,4 @@
-![PReview Logo](https://user-images.githubusercontent.com/1614415/40420806-b9ede03a-5eb3-11e8-9eb3-39aabfec668f.png)
+![PReview Logo](https://user-images.githubusercontent.com/1614415/40478035-2a561950-5f72-11e8-8b47-b13184b5086d.png)
 
 # PReview
 
