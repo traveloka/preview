@@ -65,11 +65,8 @@ export default function injectToggle(enabled, handler) {
 
     toggle.querySelectorAll("input").forEach(input => {
       input.addEventListener("click", () => {
-        const clickedInput = toggle.querySelector(
-          `input[value="${input.value}"]`
-        );
         toggle.querySelector(".selected").classList.remove("selected");
-        selectInput(clickedInput);
+        selectInput(input);
         handler(input.value);
       });
     });
