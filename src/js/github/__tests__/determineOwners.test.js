@@ -1,4 +1,4 @@
-import isOwner from "../isOwner";
+import determineOwners from "../determineOwners";
 
 test("basic string matching", () => {
   const path = "src/js/index.js";
@@ -8,9 +8,8 @@ test("basic string matching", () => {
       owners: ["@traveloka/web"]
     }
   ];
-  const userMentions = ["@pveyes", "@traveloka/web"];
 
-  expect(isOwner(path, owners, userMentions)).toBe(true);
+  expect(determineOwners(path, owners)).toEqual(["@traveloka/web"]);
 });
 
 test("basic path matching", () => {
@@ -21,9 +20,8 @@ test("basic path matching", () => {
       owners: ["@traveloka/web-flight"]
     }
   ];
-  const userMentions = ["@pveyes", "@traveloka/web"];
 
-  expect(isOwner(path, owners, userMentions)).toBe(false);
+  expect(determineOwners(path, owners)).toEqual(["@traveloka/web-flight"]);
 });
 
 test("match wildcard", () => {
@@ -34,9 +32,8 @@ test("match wildcard", () => {
       owners: ["@traveloka/web"]
     }
   ];
-  const userMentions = ["@pveyes", "@traveloka/web"];
 
-  expect(isOwner(path, owners, userMentions)).toBe(true);
+  expect(determineOwners(path, owners)).toEqual(["@traveloka/web"]);
 });
 
 test("no match", () => {
@@ -47,9 +44,7 @@ test("no match", () => {
       owners: ["@traveloka/web-flight"]
     }
   ];
-  const userMentions = ["@pveyes", "@traveloka/web-flight"];
-
-  expect(isOwner(path, owners, userMentions)).toBe(false);
+  expect(determineOwners(path, owners)).toEqual([]);
 });
 
 test("prioritize list backwards", () => {
@@ -64,6 +59,5 @@ test("prioritize list backwards", () => {
       owners: ["@traveloka/web-flight"]
     }
   ];
-  const userMentions = ["@pveyes", "@traveloka/web"];
-  expect(isOwner(path, owners, userMentions)).toBe(false);
+  expect(determineOwners(path, owners)).toEqual(["@traveloka/web-flight"]);
 });
