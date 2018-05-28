@@ -29,3 +29,6 @@ jobs:
 
       # run tests!
       - run: yarn test
+
+      # make sure we can build it
+      - run: NODE_ENV=production yarn build
