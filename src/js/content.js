@@ -2,6 +2,7 @@ import storage from "./chrome/storage";
 import getRepoInfoFromUrl from "./github/getRepoInfoFromUrl";
 import getCodeOwners from "./github/getCodeOwners";
 import getUserMentions from "./github/getUserMentions";
+import shouldEnable from "./github/shouldEnable";
 
 import observe from "./content/utils/observe";
 import applyPreview from "./content/applyPreview";
@@ -18,6 +19,10 @@ const execute = async prUrl => {
   if (observer) {
     observer.disconnect();
     observer = null;
+  }
+
+  if (!shouldEnable()) {
+    return;
   }
 
   let mode = await storage.get(STORAGE_KEY);
