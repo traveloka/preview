@@ -1,4 +1,5 @@
-import isOwner from "../github/isOwner";
+import determineOwners from "../github/determineOwners";
+import injectOwnerLabel from "./injectOwnerLabel";
 import { FILTER, HIDEOTHER, SHOWALL } from "../constants/toggleValueEnum";
 
 export default function applyPreview(mode, owners, userMentions) {
@@ -10,17 +11,18 @@ export default function applyPreview(mode, owners, userMentions) {
 
   for (const fileHeader of fileHeaders) {
     const path = fileHeader.querySelector(".file-header").dataset.path;
-    const own = isOwner(path, owners, userMentions);
+    const pathOwners = determineOwners(path, owners);
+    const isOwner = pathOwners.some(mention => userMentions.includes(mention));
     switch (mode) {
       case FILTER:
-        if (!own) {
+        if (!isOwner) {
           fileHeader.classList.add("Details--on");
           fileHeader.style.display = "block";
           fileHeader.style.opacity = 0.3;
         }
         break;
       case HIDEOTHER:
-        if (!own) {
+        if (!isOwner) {
           fileHeader.style.display = "none";
         }
         break;
@@ -30,5 +32,7 @@ export default function applyPreview(mode, owners, userMentions) {
         fileHeader.style.opacity = 1;
         break;
     }
+
+    injectOwnerLabel(fileHeader, pathOwners);
   }
 }
