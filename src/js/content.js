@@ -12,7 +12,7 @@ import { FILTER, HIDEOTHER, SHOWALL } from "./constants/toggleValueEnum";
 
 let observer;
 
-const STORAGE_KEY = "preview:enabled";
+const STORAGE_KEY = "preview:mode";
 
 const execute = async prUrl => {
   if (observer) {
@@ -20,9 +20,9 @@ const execute = async prUrl => {
     observer = null;
   }
 
-  let enabled = await storage.get(STORAGE_KEY);
-  if (![FILTER, HIDEOTHER, SHOWALL].includes(enabled)) {
-    enabled = FILTER;
+  let mode = await storage.get(STORAGE_KEY);
+  if (![FILTER, HIDEOTHER, SHOWALL].includes(mode)) {
+    mode = FILTER;
   }
 
   const repo = getRepoInfoFromUrl(prUrl);
@@ -37,8 +37,8 @@ const execute = async prUrl => {
     execute(window.location.href);
   };
 
-  injectToggle(enabled, toggleSwitchCallback);
-  const observeCallback = () => applyPreview(enabled, owners, userMentions);
+  injectToggle(mode, toggleSwitchCallback);
+  const observeCallback = () => applyPreview(mode, owners, userMentions);
   observer = observe("#files", observeCallback, {
     childList: true,
     subtree: true

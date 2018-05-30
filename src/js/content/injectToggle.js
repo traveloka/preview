@@ -22,7 +22,7 @@ const selectInput = input => {
   input.parentNode.classList.add("selected");
 };
 
-export default function injectToggle(enabled, handler) {
+export default function injectToggle(mode, handler) {
   const bar = document.querySelector(".diffbar");
   const toggle = bar.querySelector("#gh-preview-toggle");
 
@@ -40,25 +40,7 @@ export default function injectToggle(enabled, handler) {
     toggle.style.top = "-4px";
     toggle.innerHTML = template;
 
-    let defaultSelectedInput;
-    switch (enabled) {
-      case FILTER:
-        defaultSelectedInput = toggle.querySelector(`input[value="${FILTER}"]`);
-        break;
-      case HIDEOTHER:
-        defaultSelectedInput = toggle.querySelector(
-          `input[value="${HIDEOTHER}"]`
-        );
-        break;
-      case SHOWALL:
-        defaultSelectedInput = toggle.querySelector(
-          `input[value="${SHOWALL}"]`
-        );
-        break;
-      default:
-        break;
-    }
-
+    const defaultSelectedInput = toggle.querySelector(`input[value="${mode}"]`);
     selectInput(defaultSelectedInput);
 
     stat.parentNode.insertBefore(toggle, stat.nextSibling);

@@ -1,7 +1,7 @@
 import isOwner from "../github/isOwner";
 import { FILTER, HIDEOTHER, SHOWALL } from "../constants/toggleValueEnum";
 
-export default function applyPreview(enabled, owners, userMentions) {
+export default function applyPreview(mode, owners, userMentions) {
   if (owners.length === 0) {
     return;
   }
@@ -11,7 +11,7 @@ export default function applyPreview(enabled, owners, userMentions) {
   for (const fileHeader of fileHeaders) {
     const path = fileHeader.querySelector(".file-header").dataset.path;
     const own = isOwner(path, owners, userMentions);
-    switch (enabled) {
+    switch (mode) {
       case FILTER:
         if (!own) {
           fileHeader.classList.add("Details--on");
