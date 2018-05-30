@@ -1,7 +1,7 @@
 {
   "name": "preview",
   "private": true,
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Browser extension to help make your GitHub PR review experience better",
   "scripts": {
     "build": "node utils/build.js",
