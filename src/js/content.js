@@ -8,10 +8,11 @@ import applyPreview from "./content/applyPreview";
 import injectToggle from "./content/injectToggle";
 import isFilesSection from "./utils/isFilesSection";
 import { HISTORY_STATE_UPDATE } from "./utils/events";
+import { FILTER, HIDEOTHER, SHOWALL } from "./constants/toggleValueEnum";
 
 let observer;
 
-const STORAGE_KEY = "preview:enabled";
+const STORAGE_KEY = "preview:mode";
 
 const execute = async prUrl => {
   if (observer) {
@@ -19,9 +20,9 @@ const execute = async prUrl => {
     observer = null;
   }
 
-  let enabled = await storage.get(STORAGE_KEY);
-  if (typeof enabled !== "boolean") {
-    enabled = true;
+  let mode = await storage.get(STORAGE_KEY);
+  if (![FILTER, HIDEOTHER, SHOWALL].includes(mode)) {
+    mode = FILTER;
   }
 
   const repo = getRepoInfoFromUrl(prUrl);
@@ -32,16 +33,12 @@ const execute = async prUrl => {
   ]);
 
   const toggleSwitchCallback = async value => {
-    if (value === "showall") {
-      await storage.set(STORAGE_KEY, false);
-    } else {
-      await storage.set(STORAGE_KEY, true);
-    }
+    await storage.set(STORAGE_KEY, value);
     execute(window.location.href);
   };
 
-  injectToggle(enabled, toggleSwitchCallback);
-  const observeCallback = () => applyPreview(enabled, owners, userMentions);
+  injectToggle(mode, toggleSwitchCallback);
+  const observeCallback = () => applyPreview(mode, owners, userMentions);
   observer = observe("#files", observeCallback, {
     childList: true,
     subtree: true
