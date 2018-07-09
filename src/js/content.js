@@ -1,22 +1,36 @@
+import storage from "./chrome/storage";
 import getRepoInfoFromUrl from "./github/getRepoInfoFromUrl";
 import getCodeOwners from "./github/getCodeOwners";
 import getUserMentions from "./github/getUserMentions";
+import shouldEnable from "./github/shouldEnable";
 
 import observe from "./content/utils/observe";
-import reorderFiles from "./content/reorderFiles";
+import applyPreview from "./content/applyPreview";
+import injectToggle from "./content/injectToggle";
 import isFilesSection from "./utils/isFilesSection";
 import isPullsSection from "./utils/isPullsSection";
 import { HISTORY_STATE_UPDATE } from "./utils/events";
+import { FILTER, HIDEOTHER, SHOWALL } from "./constants/toggleValueEnum";
 import isChangeRequestUpdated from "./github/isChangeRequestUpdated";
 
 import "./content.css";
 
 let observer;
+const STORAGE_KEY = "preview:mode";
 
 const runFileFilter = async prUrl => {
   if (observer) {
     observer.disconnect();
     observer = null;
+  }
+
+  if (!shouldEnable()) {
+    return;
+  }
+
+  let mode = await storage.get(STORAGE_KEY);
+  if (![FILTER, HIDEOTHER, SHOWALL].includes(mode)) {
+    mode = FILTER;
   }
 
   const repo = getRepoInfoFromUrl(prUrl);
@@ -26,8 +40,17 @@ const runFileFilter = async prUrl => {
     getUserMentions(repo)
   ]);
 
-  const callback = () => reorderFiles(owners, userMentions);
-  observer = observe("#files", callback, { childList: true, subtree: true });
+  const toggleSwitchCallback = async value => {
+    await storage.set(STORAGE_KEY, value);
+    execute(window.location.href);
+  };
+
+  injectToggle(mode, toggleSwitchCallback);
+  const observeCallback = () => applyPreview(mode, owners, userMentions);
+  observer = observe("#files", observeCallback, {
+    childList: true,
+    subtree: true
+  });
 };
 
 const runPullsSection = async prUrl => {
