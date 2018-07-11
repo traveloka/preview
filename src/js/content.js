@@ -5,6 +5,7 @@ import getUserMentions from "./github/getUserMentions";
 import shouldEnable from "./github/shouldEnable";
 
 import observe from "./content/utils/observe";
+import insertOutdatedComments from "./content/insertOutdatedComments";
 import applyPreview from "./content/applyPreview";
 import injectToggle from "./content/injectToggle";
 import isFilesSection from "./utils/isFilesSection";
@@ -46,7 +47,10 @@ const runFileFilter = async prUrl => {
   };
 
   injectToggle(mode, toggleSwitchCallback);
-  const observeCallback = () => applyPreview(mode, owners, userMentions);
+  const observeCallback = () => {
+    insertOutdatedComments(repo);
+    applyPreview(mode, owners, userMentions);
+  };
   observer = observe("#files", observeCallback, {
     childList: true,
     subtree: true
