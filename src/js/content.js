@@ -62,7 +62,8 @@ const runPullsSection = async prUrl => {
   const prItems = document.querySelectorAll(
     ".js-active-navigation-container > li"
   );
-  for (const node of prItems) {
+
+  const promises = Array.from(prItems).map(async node => {
     const statusNode = node.querySelector(".mt-1 > .d-inline-block > a");
     const status = statusNode ? statusNode.innerHTML.trim() : "";
     if (status.includes("Changes requested")) {
@@ -70,12 +71,22 @@ const runPullsSection = async prUrl => {
         .toString()
         .substring(6)
         .trim();
+
       const changed = await isChangeRequestUpdated(prNumber, repo);
+      return {
+        changed,
+        node
+      };
+    }
+  });
+
+  Promise.all(promises).then(results => {
+    results.forEach(({ changed, node }) => {
       if (changed) {
         node.classList.add("request-updated");
       }
-    }
-  }
+    });
+  });
 };
 
 chrome.runtime.onMessage.addListener((request, sender) => {
