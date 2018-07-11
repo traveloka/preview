@@ -78,6 +78,10 @@ const runPullsSection = async prUrl => {
         node
       };
     }
+    return {
+      changed: false,
+      node
+    };
   });
 
   Promise.all(promises).then(results => {
