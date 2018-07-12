@@ -33,5 +33,7 @@ function isRequestChangeEvent(node) {
 //Notes : only author commit will return true
 function isAuthorCommitEvent(node) {
   if (node.innerText.includes("added some commit")) return true;
+  else if (node.innerText.includes("New changes since you last viewed"))
+    return true;
   return false;
 }
