@@ -5,17 +5,21 @@ import getUserMentions from "./github/getUserMentions";
 import shouldEnable from "./github/shouldEnable";
 
 import observe from "./content/utils/observe";
+import insertOutdatedComments from "./content/insertOutdatedComments";
 import applyPreview from "./content/applyPreview";
 import injectToggle from "./content/injectToggle";
 import isFilesSection from "./utils/isFilesSection";
+import isPullsSection from "./utils/isPullsSection";
 import { HISTORY_STATE_UPDATE } from "./utils/events";
 import { FILTER, HIDEOTHER, SHOWALL } from "./constants/toggleValueEnum";
+import isChangeRequestUpdated from "./github/isChangeRequestUpdated";
+
+import "./content.css";
 
 let observer;
-
 const STORAGE_KEY = "preview:mode";
 
-const execute = async prUrl => {
+const runFileFilter = async prUrl => {
   if (observer) {
     observer.disconnect();
     observer = null;
@@ -43,20 +47,65 @@ const execute = async prUrl => {
   };
 
   injectToggle(mode, toggleSwitchCallback);
-  const observeCallback = () => applyPreview(mode, owners, userMentions);
+  const observeCallback = () => {
+    insertOutdatedComments(repo);
+    applyPreview(mode, owners, userMentions);
+  };
   observer = observe("#files", observeCallback, {
     childList: true,
     subtree: true
   });
 };
 
+const runPullsSection = async prUrl => {
+  const repo = getRepoInfoFromUrl(prUrl);
+  const prItems = document.querySelectorAll(
+    ".js-active-navigation-container > li"
+  );
+
+  const promises = Array.from(prItems).map(async node => {
+    const statusNode = node.querySelector(".mt-1 > .d-inline-block > a");
+    const status = statusNode ? statusNode.innerHTML.trim() : "";
+    if (status.includes("Changes requested")) {
+      const prNumber = node.id
+        .toString()
+        .substring(6)
+        .trim();
+
+      const changed = await isChangeRequestUpdated(prNumber, repo);
+      return {
+        changed,
+        node
+      };
+    }
+    return {
+      changed: false,
+      node
+    };
+  });
+
+  Promise.all(promises).then(results => {
+    results.forEach(({ changed, node }) => {
+      if (changed) {
+        node.classList.add("request-updated");
+      }
+    });
+  });
+};
+
 chrome.runtime.onMessage.addListener((request, sender) => {
   if (request.event === HISTORY_STATE_UPDATE) {
-    execute(request.url);
+    if (isFilesSection(request.url)) {
+      runFileFilter(request.url);
+    } else if (isPullsSection(request.url)) {
+      runPullsSection(request.url);
+    }
   }
 });
 
 // From URL
 if (isFilesSection(window.location.href)) {
-  execute(window.location.href);
+  runFileFilter(window.location.href);
+} else if (isPullsSection(window.location.href)) {
+  runPullsSection(window.location.href);
 }
