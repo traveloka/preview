@@ -66,6 +66,7 @@ const runPullsSection = async prUrl => {
   const promises = Array.from(prItems).map(async node => {
     const statusNode = node.querySelector(".mt-1 > .d-inline-block > a");
     const status = statusNode ? statusNode.innerHTML.trim() : "";
+
     if (status.includes("Changes requested")) {
       const prNumber = node.id
         .toString()
@@ -75,19 +76,19 @@ const runPullsSection = async prUrl => {
       const changed = await isChangeRequestUpdated(prNumber, repo);
       return {
         changed,
-        node
+        statusNode
       };
     }
     return {
       changed: false,
-      node
+      statusNode
     };
   });
 
   Promise.all(promises).then(results => {
-    results.forEach(({ changed, node }) => {
+    results.forEach(({ changed, statusNode }) => {
       if (changed) {
-        node.classList.add("request-updated");
+        statusNode.innerText = "Updated Request Changes";
       }
     });
   });
