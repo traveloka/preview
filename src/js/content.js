@@ -43,7 +43,7 @@ const runFileFilter = async prUrl => {
 
   const toggleSwitchCallback = async value => {
     await storage.set(STORAGE_KEY, value);
-    execute(window.location.href);
+    runFileFilter(window.location.href);
   };
 
   injectToggle(mode, toggleSwitchCallback);
