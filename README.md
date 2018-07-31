@@ -8,7 +8,8 @@
 
 ## Install
 
-Install via [Chrome Web Store](https://chrome.google.com/webstore/detail/jgmndkkhollhdepgnhinofidfjojlkod)
+* [Chrome Web Store](https://chrome.google.com/webstore/detail/jgmndkkhollhdepgnhinofidfjojlkod)
+* [Mozilla Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/preview/)
 
 ## Local Setup
 
