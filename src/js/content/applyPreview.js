@@ -16,7 +16,7 @@ export default function applyPreview(mode, owners, userMentions) {
     switch (mode) {
       case FILTER:
         if (!isOwner) {
-          fileHeader.classList.add("Details--on");
+          fileHeader.classList.remove("Details--on");
           fileHeader.style.display = "block";
           fileHeader.style.opacity = 0.3;
         }
@@ -27,7 +27,7 @@ export default function applyPreview(mode, owners, userMentions) {
         }
         break;
       case SHOWALL:
-        fileHeader.classList.remove("Details--on");
+        fileHeader.classList.add("Details--on");
         fileHeader.style.display = "block";
         fileHeader.style.opacity = 1;
         break;
