@@ -5,7 +5,9 @@ export default async function getUserMentions(repo) {
   const html = await fetchHtml("/");
   const teams = domFind(
     html,
-    root => root.querySelector("#your_teams ul").innerText
+    root =>
+      root.querySelector("#your-teams-filter").parentNode.parentNode.children[2]
+        .innerText
   )
     .split("\n")
     .filter(Boolean)
