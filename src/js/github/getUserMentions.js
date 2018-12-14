@@ -1,38 +1,59 @@
 import fetchHtml from "./fetchHtml";
 import domFind from "../content/utils/domFind";
+import Cache from "../content/utils/Cache";
+
+function generateCacheKey(user) {
+  return `user:mentions:${user}`;
+}
+
+const cache = new Cache();
 
 export default async function getUserMentions(repo) {
+  const user = document.querySelector("img.avatar.float-left").alt;
+  const cacheKey = generateCacheKey(user);
+  const cacheData = cache.get(cacheKey);
+
+  if (cacheData) {
+    return cacheData;
+  }
+
   const html = await fetchHtml("/");
   const teams = domFind(html, root => {
-    const betaDashboardTeamsNode = root.querySelector("#your-teams-filter")
-      .parentNode.parentNode.children[2];
-    if (betaDashboardTeamsNode) {
-      return betaDashboardTeamsNode.innerText;
+    // I think the most reliable way to get list of teams is by using text node
+    // selector instead of class / data attributes. They may change their attribute
+    // as they wish and we still need to update it everytime. Searching text node
+    // should minimize this necessary adjustment
+    const treeWalker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+
+    let textNode;
+    while ((textNode = treeWalker.nextNode())) {
+      if (textNode.textContent === "Your teams") {
+        break;
+      }
     }
 
-    // user maybe still using old dashboard
-    return root.querySelector("[data-filterable-for='your-teams-filter']")
-      .innerText;
+    let node = textNode.parentNode;
+    do {
+      // By using while loop, we can use single logic for both beta dashboard
+      // and old dashboard
+      node = node.parentNode;
+      // we still rely on element selector in the end, but ul is less fragile
+      // than data-filterable-for attribute selector
+    } while (node.querySelector("ul") == null);
+
+    return node.textContent;
   })
     .split("\n")
-    .filter(Boolean)
     .map(t => t.trim())
     .filter(Boolean)
     .map(t => `@${t}`);
 
-  const user =
-    "@" +
-    domFind(html, root => {
-      const betaDashboardAccountSwitcher = root.querySelector(
-        ".account-switcher span"
-      );
-      if (betaDashboardAccountSwitcher) {
-        return betaDashboardAccountSwitcher.innerText;
-      }
-
-      return root.querySelector(".account-switcher-truncate-override")
-        .innerText;
-    }).trim();
-
-  return teams.concat([user]);
+  const result = teams.concat([user]);
+  cache.set(cacheKey, result);
+  return result;
 }
