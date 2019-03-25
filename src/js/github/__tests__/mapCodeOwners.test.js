@@ -1,4 +1,4 @@
-import mapCodeOwners from "../mapCodeOwners";
+import { mapCodeOwners } from "../getCodeOwners";
 
 test("basic", () => {
   const codeowners = `

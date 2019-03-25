@@ -10,7 +10,7 @@ export default function applyPreview(mode, owners, userMentions) {
   const fileHeaders = document.querySelectorAll(".file");
 
   for (const fileHeader of fileHeaders) {
-    const path = fileHeader.querySelector(".file-header").dataset.path;
+    const path = fileHeader.querySelector(".file-info a").textContent;
     const pathOwners = determineOwners(path, owners);
     const isOwner = pathOwners.some(mention => userMentions.includes(mention));
     switch (mode) {
