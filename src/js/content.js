@@ -60,7 +60,7 @@ const runFileFilter = async prUrl => {
 const runPullsSection = async prUrl => {
   const repo = getRepoInfoFromUrl(prUrl);
   const prItems = document.querySelectorAll(
-    ".js-active-navigation-container > li"
+    ".js-active-navigation-container > div"
   );
 
   const promises = Array.from(prItems).map(async node => {
@@ -88,7 +88,7 @@ const runPullsSection = async prUrl => {
   Promise.all(promises).then(results => {
     results.forEach(({ changed, statusNode }) => {
       if (changed) {
-        statusNode.innerText = "Updated Request Changes";
+        statusNode.innerText = "Changes requested • PR updated";
       }
     });
   });
