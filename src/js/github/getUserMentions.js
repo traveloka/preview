@@ -9,7 +9,7 @@ function generateCacheKey(user) {
 const cache = new Cache();
 
 export default async function getUserMentions(repo) {
-  const user = document.querySelector("img.avatar.float-left").alt;
+  const user = document.querySelector("img.avatar").alt;
   const cacheKey = generateCacheKey(user);
   const cacheData = cache.get(cacheKey);
 
