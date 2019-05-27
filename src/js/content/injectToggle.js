@@ -31,7 +31,7 @@ export default function injectToggle(mode, handler) {
      * Place our toggle after diff stat
      * @see https://stackoverflow.com/questions/4793604/how-to-insert-an-element-after-another-element-in-javascript-without-using-a-lib
      */
-    const stat = document.querySelector(".diffstat");
+    const stat = document.querySelector(".toc-select + .diffbar-item");
     const toggle = document.createElement("div");
     toggle.id = "gh-preview-toggle";
     toggle.className = "diffbar-item";
